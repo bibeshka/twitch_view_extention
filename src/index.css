@@ -1,13 +1,349 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --main-bg-color: #a97aee;
+  --main-container-bg: #fff;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 400px;
+  max-width: 400px;
+  border: 1.5px solid rgb(224, 218, 218);
+  min-height: 430px;
+}
+
+header {
+  background: var(--main-bg-color);
+  color: #fff;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header .fab.fa-twitch {
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+header h1 {
+  margin-left: 10px;
+  margin-right: 25px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+header h2 {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+header h1:hover {
+  color: #692ca1;
+}
+
+header a {
+  text-decoration: none;
+  color: rgb(238, 228, 228);
+}
+
+header .logout-button {
+  border:none;
+  background: none;
+  color: rgb(238, 228, 228);
+  margin-left: 30px;
+  cursor: pointer;
+}
+
+header .logout-button h1 {
+  margin-left: 5px;
+}
+
+header .logout-button:hover {
+  color: #692ca1;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1.5px solid rgb(224, 218, 218);
+  padding-bottom: 15px;
+}
+
+.nav-link.active {
+  border-bottom: 4px solid #a97aee;
+}
+
+.nav-link {
+  margin-right: 15px;
+}
+
+nav h1 {
+  font-size: 1.2rem;
+  /* margin-right: 15px; */
+  color: #692ca1;
+  cursor: pointer;;
+}
+
+nav h1:hover {
+  color: #a97aee;
+  /* border-bottom: 4px solid #a97aee; */
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(238, 228, 228);
+}
+
+nav div {
+  text-align: center;
+  margin:0 auto;
+}
+
+/* Main container */
+.container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.container::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.container::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: rgb(161, 158, 158);
+}
+
+/* Channels container */
+
+.container {
+  background: var(--main-container-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 430px;
+  max-height: 430px;
+  min-width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.container .loading-gif {
+  min-height: 430px;
+  min-width: 100%;
+}
+
+.channel-container {
+  margin: 0 auto;
+  padding: 20px;
+  cursor: pointer;
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.channel-container:hover {
+  background: rgb(248, 248, 248);
+}
+
+.channel-container a {
+  text-decoration: none;
+  color: #692ca1;
+  display: flex;
+}
+
+.channel-container .channel-container-info {
+  padding-left: 30px;
+}
+
+.channel-container .channel-container-info h2 {
+  font-size: 1rem;
+}
+
+.channel-container .channel-container-info p {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.channel-container p {
+  margin-top: 5px;
+}
+
+.channel-container .channel-container-img img {
+  border: 2px solid #692ca1;
+  width: 180px;
+  height: 110px;
+}
+
+.channel-container .viewers-count {
+  color: red;
+}
+
+.stream-title {
+  font-size: 1.15rem;
+  color: black;
+}
+
+.fas.fa-users {
+  color: red;
+  margin-right: 5px;
+}
+
+.stream-time {
+  color: black;
+}
+
+.game-title {
+  color: #692ca1;
+}
+
+/* Login form styles */
+
+.usernameForm {
+  margin-top: 50px;
+  font-family: arial;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.usernameForm h1 {
+  font-size: 2rem;
+}
+
+.usernameForm input {
+  min-width: 300px;
+  min-height: 30px;
+  border: 1.5px solid #a97aee;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.usernameForm button {
+  min-width: 150px;
+  min-height: 30px;
+  margin-top: 10px;
+  font-size: 1.1rem;
+  padding: 5px;
+  background: #692ca1;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.usernameForm button:hover {
+  background: #a97aee;
+}
+
+.usernameForm p {
+  margin-top: 25px;
+}
+
+.usernameForm p span {
+  color: #692ca1;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.usernameForm p span:hover {
+  color: #a97aee;
+}
+
+.usernameForm .username-errors {
+  margin-top: 10px;
+  color: brown;
+}
+
+/* CLIPS */
+
+.clips-time-buttons {
+
+}
+
+.clips-time-buttons button {
+  font-size: 1.1rem;
+  padding: 7px;
+  background: #692ca1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.clips-time-buttons button:hover {
+  background: #a97aee;
+}
+
+
+.clips-container {
+  text-align: center;
+  min-width: 400px;
+  max-width: 500px;
+  margin-top: 10px;
+  margin: 0 auto;
+}
+
+.clips-container a {
+  text-decoration: none;
+  color: #692ca1;
+}
+
+.clip-wrapper {
+  padding: 20px;
+  display: flex;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.clip-wrapper:hover {
+  background-color: rgb(248, 248, 248);
+}
+
+.clip-container img {
+  width: 300px;
+  margin-top: 10px;
+  border: 3px solid #692ca1;
+}
+
+.clips-container .channel-container-img img {
+  width: 180px;
+  height: 110px;
+  border: 2px solid #692ca1;
+}
+
+.clips-container .channel-container-info {
+  padding-left: 30px;
+  padding-top: 10px;
+}
+
+.clips-container .channel-container-info h3 {
+  font-size: 1rem;
+  /* height: 150px; */
+}
+
+.clips-container .channel-container-info p {
+  margin-top: 10px;
+  color: rgb(112, 108, 108);
+  font-size: 0.7rem;
 }
