@@ -14,8 +14,8 @@ const ClipSingle = ({ channelID, channelName, clipDate, AUTH_TOKEN }) => {
         if(clipDate) {
             getClips(channelID, clipDate).then((data) => {
             if(mounted) {
-                setClips(data);
-                setLoaded(true);
+                    setClips(data);
+                    setLoaded(true);
                 }
             });
         }
@@ -42,6 +42,8 @@ const ClipSingle = ({ channelID, channelName, clipDate, AUTH_TOKEN }) => {
     
     return (
         <div>
+            { 
+            loaded ?
             <div className="clips-container">
                 { clips && clips[0] ? <h2>{channelName}</h2> : null }
                 {
@@ -71,7 +73,11 @@ const ClipSingle = ({ channelID, channelName, clipDate, AUTH_TOKEN }) => {
                         </a>
                     )) : null
                 }
+            </div> :
+            <div className="loading-gif">
+                <img src="images/loading.gif" alt="Loading..."/>
             </div>
+        }
         </div>
     )
 }

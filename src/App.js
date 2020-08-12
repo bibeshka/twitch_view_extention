@@ -11,47 +11,31 @@ import Vods from './components/Vods';
 
 const App = () => {
 
-
   const [ userData, setUserData ] = useState([]);
   const [ userFollows, setUserFollows ] = useState([]);
   const [ onlineChannels, setOnlineChannels ] = useState([]);
 
-  const [login, setLogin] = useState(false);
-
   useEffect(() => {
-    setLocalStorageToken();
-
-    localStorage.getItem('twitch_view_token') && setLogin(true);
 
     getUserData().then((res) => {
       getUserFollows(res.data.data[0].id);
     });
   }, []);
 
-
+  //get token from URL
   const getToken = (name) => {
     let s = window.location.href;
     s = s.match(new RegExp(name + '=([^&=]+)'));
     return s ? s[1] : false;
   }
 
-  const setLocalStorageToken = () => {
-    let result = getToken('access_token');
-    console.log(result);
-    localStorage.setItem('twitch_view_token', result); 
+  const AUTH_TOKEN = getToken('access_token');
+  
+  if (AUTH_TOKEN) {
+    localStorage.setItem('twitch_view_token', AUTH_TOKEN);
   }
-
-  //get token from URL
-
-  // const AUTH_TOKEN = getToken('access_token');
+  
   let LS_AUTH_TOKEN = localStorage.getItem('twitch_view_token');
-  let AUTH_TOKEN;
-
-  if(localStorage.getItem('twitch_view_token')) {
-    AUTH_TOKEN = localStorage.getItem('twitch_view_token');
-  } else {
-      AUTH_TOKEN = getToken('access_token');
-  }
 
   //get nickname and user_id
   const getUserData = async () => {
@@ -60,7 +44,7 @@ const App = () => {
       url: `https://api.twitch.tv/helix/users`,
       headers: {
         'Client-ID': CLIENT_ID,
-        'Authorization' : "Bearer " + AUTH_TOKEN
+        'Authorization' : "Bearer " + LS_AUTH_TOKEN
       }
     });
 
@@ -75,11 +59,10 @@ const App = () => {
       url: `https://api.twitch.tv/helix/users/follows?from_id=${id}&first=100`,
       headers: {
           'Client-ID': CLIENT_ID,
-          'Authorization' : "Bearer " + AUTH_TOKEN
+          'Authorization' : "Bearer " + LS_AUTH_TOKEN
       }
     });
 
-    console.log(result);
     setUserFollows(result);
   
     result.data.data.map(channel => {
@@ -96,12 +79,11 @@ const App = () => {
         url: `https://api.twitch.tv/helix/streams?user_id=${user_id}`,
         headers: {
           'Client-ID': CLIENT_ID,
-          'Authorization' : "Bearer " + AUTH_TOKEN
+          'Authorization' : "Bearer " + LS_AUTH_TOKEN
         }
     });
 
       if (result.data.data.length !== 0) {
-        console.log(result.data.data[0]);
         setOnlineChannels(onlineChannels => [...onlineChannels, result.data.data[0]]);
       }
 
@@ -113,43 +95,28 @@ const App = () => {
   return (
     <Router>
       <div>
-        <Navigation userData={userData} />
+        <Navigation userData={userData} AUTH_TOKEN={LS_AUTH_TOKEN} />
         <Switch>
-          {/* <Route path="/" exact>
-            <Follows AUTH_TOKEN={AUTH_TOKEN} onlineChannels={onlineChannels} />
-          </Route>
-          
-          <Route path="/clips" exact>
-            <Clips AUTH_TOKEN={AUTH_TOKEN} follows={userFollows} />
-          </Route>
-          
-          <Route path="/vods" exact>
-            <Vods AUTH_TOKEN={AUTH_TOKEN} follows={userFollows} />
-          </Route>
-          
-          <Route path="/login" exact>
-            <Login CLIENT_ID={CLIENT_ID} />
-          </Route> */}
-
 
           <Route path="/" exact>
-            { login || AUTH_TOKEN ? <Follows AUTH_TOKEN={AUTH_TOKEN} onlineChannels={onlineChannels} /> 
+            { LS_AUTH_TOKEN ? <Follows AUTH_TOKEN={LS_AUTH_TOKEN} onlineChannels={onlineChannels} /> 
               : <Redirect to="/login" /> } 
           </Route>
           
           <Route path="/clips" exact>
-            { login || AUTH_TOKEN  ? <Clips AUTH_TOKEN={AUTH_TOKEN} follows={userFollows} /> 
+            { LS_AUTH_TOKEN  ? <Clips AUTH_TOKEN={LS_AUTH_TOKEN} follows={userFollows} /> 
               : <Redirect to="/login" />}
           </Route>
           
           <Route path="/vods" exact>
-            { login || AUTH_TOKEN  ? <Vods AUTH_TOKEN={AUTH_TOKEN} follows={userFollows} /> 
+            { LS_AUTH_TOKEN  ? <Vods AUTH_TOKEN={LS_AUTH_TOKEN} follows={userFollows} /> 
               : <Redirect to="/login" /> }
           </Route>
           
           <Route path="/login" exact>
             <Login CLIENT_ID={CLIENT_ID} />
           </Route>
+
         </Switch>
       </div>
     </Router>

@@ -6,9 +6,10 @@ import { CLIENT_ID } from '../api';
 const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
 
     const [videos, setVideos] = useState([]);
+    const[loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        getVideo(channelID)
+        getVideo(channelID).then(() => setLoaded(true));
     }, [channelID]);
 
     const sliceImageString = (str) => {
@@ -40,7 +41,7 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
                 'Authorization' : "Bearer " + AUTH_TOKEN
             }
           });
-          console.log(result.data.data)
+
           setVideos(result.data.data);
         } catch(error) {
           console.log(error)
@@ -49,6 +50,7 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
     
     return (
         <div>
+            { loaded ?
             <div className="clips-container">
                 { videos[0] ? <h2>{channelName}</h2> : null }
                 {
@@ -76,7 +78,11 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
                         </a>
                     )) : null
                 }
+            </div> :
+            <div className="loading-gif">
+              <img src="images/loading.gif" alt="Loading..."/>
             </div>
+            }
         </div>
     )
 }

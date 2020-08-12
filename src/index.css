@@ -274,6 +274,17 @@ nav div {
   color: brown;
 }
 
+.usernameForm .login_btn {
+  background-color: #692ca1;
+  padding: 5px;
+  color: white;
+  text-decoration: #F5F5F5;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 /* CLIPS */
 
 .clips-time-buttons {

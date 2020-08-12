@@ -10,9 +10,9 @@ const FollowSingle = ({ AUTH_TOKEN, channel }) => {
 
     useEffect(() => {
         getGame(channel.game_id).then(res => {
-            setGame(res);   
+            setGame(res);
+            setLoaded(true);   
         });
-        console.log(AUTH_TOKEN);
     }, []);
 
 
@@ -37,6 +37,7 @@ const FollowSingle = ({ AUTH_TOKEN, channel }) => {
 
     return (
         <div>
+            { loaded ? 
             <div className="channels-container">
                 <div className="channel-container">
                     <a href={`https://www.twitch.tv/${channel.user_name}`}
@@ -72,8 +73,13 @@ const FollowSingle = ({ AUTH_TOKEN, channel }) => {
                             </p>
                         </div>
                     </a>
-                </div>
+                </div> 
             </div>
+            :
+            <div className="loading-gif">
+                <img src="images/loading.gif" alt="Loading..."/>
+            </div>
+            }
         </div>
     )
 }
