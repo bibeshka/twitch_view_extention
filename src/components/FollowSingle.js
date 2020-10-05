@@ -20,7 +20,7 @@ const FollowSingle = ({ AUTH_TOKEN, channel }) => {
         method: "get",
         url: `https://api.twitch.tv/helix/games?id=${id}`,
         headers: {
-          "Client-ID": CLIENT_ID,
+          "Client-ID": process.env.REACT_APP_CLIENT_ID,
           Authorization: "Bearer " + AUTH_TOKEN,
         },
       });

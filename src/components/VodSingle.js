@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import axios from "axios";
-import { CLIENT_ID } from "../api";
+// import { CLIENT_ID } from "../api";
 
 const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
   const [videos, setVideos] = useState([]);
@@ -36,7 +36,7 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
         method: "get",
         url: `https://api.twitch.tv/helix/videos?user_id=${channelID}&first=3`,
         headers: {
-          "Client-ID": CLIENT_ID,
+          "Client-ID": process.env.REACT_APP_CLIENT_ID,
           Authorization: "Bearer " + AUTH_TOKEN,
         },
       });

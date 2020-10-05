@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 
-import { CLIENT_ID } from "./api";
+// import { CLIENT_ID } from "./api";
 import Login from "./components/Login";
 import Follows from "./components/Follows";
 import Navigation from "./components/Navigation";
@@ -46,7 +46,7 @@ const App = () => {
       method: "get",
       url: `https://api.twitch.tv/helix/users`,
       headers: {
-        "Client-ID": CLIENT_ID,
+        "Client-ID": process.env.REACT_APP_CLIENT_ID,
         Authorization: "Bearer " + LS_AUTH_TOKEN,
       },
     });
@@ -61,7 +61,7 @@ const App = () => {
       method: "get",
       url: `https://api.twitch.tv/helix/users/follows?from_id=${id}&first=100`,
       headers: {
-        "Client-ID": CLIENT_ID,
+        "Client-ID": process.env.REACT_APP_CLIENT_ID,
         Authorization: "Bearer " + LS_AUTH_TOKEN,
       },
     });
@@ -80,7 +80,7 @@ const App = () => {
         method: "get",
         url: `https://api.twitch.tv/helix/streams?user_id=${user_id}`,
         headers: {
-          "Client-ID": CLIENT_ID,
+          "Client-ID": process.env.REACT_APP_CLIENT_ID,
           Authorization: "Bearer " + LS_AUTH_TOKEN,
         },
       });
@@ -129,7 +129,7 @@ const App = () => {
           </Route>
 
           <Route path="/login" exact>
-            <Login CLIENT_ID={CLIENT_ID} />
+            <Login CLIENT_ID={process.env.REACT_APP_CLIENT_ID} />
           </Route>
         </Switch>
       </div>
