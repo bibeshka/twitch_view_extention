@@ -19,11 +19,69 @@ const App = () => {
   const [userFollows, setUserFollows] = useState([]);
   const [onlineChannels, setOnlineChannels] = useState([]);
 
+  let LS_AUTH_TOKEN = localStorage.getItem("twitch_view_token");
+
   useEffect(() => {
+    //get nickname and user_id
+    const getUserData = async () => {
+      const result = await axios({
+        method: "get",
+        url: `https://api.twitch.tv/helix/users`,
+        headers: {
+          "Client-ID": process.env.REACT_APP_CLIENT_ID,
+          Authorization: "Bearer " + LS_AUTH_TOKEN,
+        },
+      });
+
+      setUserData(result);
+      return result;
+    };
+
+    //get follow channels who live now
+    const getOnlineChannels = async (user_id) => {
+      try {
+        const result = await axios({
+          method: "get",
+          url: `https://api.twitch.tv/helix/streams?user_id=${user_id}`,
+          headers: {
+            "Client-ID": process.env.REACT_APP_CLIENT_ID,
+            Authorization: "Bearer " + LS_AUTH_TOKEN,
+          },
+        });
+
+        if (result.data.data.length !== 0) {
+          setOnlineChannels((onlineChannels) => [
+            ...onlineChannels,
+            result.data.data[0],
+          ]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    //get channel user follow
+    const getUserFollows = async (id) => {
+      const result = await axios({
+        method: "get",
+        url: `https://api.twitch.tv/helix/users/follows?from_id=${id}&first=100`,
+        headers: {
+          "Client-ID": process.env.REACT_APP_CLIENT_ID,
+          Authorization: "Bearer " + LS_AUTH_TOKEN,
+        },
+      });
+
+      setUserFollows(result);
+
+      result.data.data.map((channel) => {
+        getOnlineChannels(channel.to_id);
+      });
+    };
+
     getUserData().then((res) => {
       getUserFollows(res.data.data[0].id);
     });
-  }, []);
+  }, [LS_AUTH_TOKEN]);
 
   //get token from URL
   const getToken = (name) => {
@@ -37,64 +95,6 @@ const App = () => {
   if (AUTH_TOKEN) {
     localStorage.setItem("twitch_view_token", AUTH_TOKEN);
   }
-
-  let LS_AUTH_TOKEN = localStorage.getItem("twitch_view_token");
-
-  //get nickname and user_id
-  const getUserData = async () => {
-    const result = await axios({
-      method: "get",
-      url: `https://api.twitch.tv/helix/users`,
-      headers: {
-        "Client-ID": process.env.REACT_APP_CLIENT_ID,
-        Authorization: "Bearer " + LS_AUTH_TOKEN,
-      },
-    });
-
-    setUserData(result);
-    return result;
-  };
-
-  //get channel user follow
-  const getUserFollows = async (id) => {
-    const result = await axios({
-      method: "get",
-      url: `https://api.twitch.tv/helix/users/follows?from_id=${id}&first=100`,
-      headers: {
-        "Client-ID": process.env.REACT_APP_CLIENT_ID,
-        Authorization: "Bearer " + LS_AUTH_TOKEN,
-      },
-    });
-
-    setUserFollows(result);
-
-    result.data.data.map((channel) => {
-      getOnlineChannels(channel.to_id);
-    });
-  };
-
-  //get follow channels who live now
-  const getOnlineChannels = async (user_id) => {
-    try {
-      const result = await axios({
-        method: "get",
-        url: `https://api.twitch.tv/helix/streams?user_id=${user_id}`,
-        headers: {
-          "Client-ID": process.env.REACT_APP_CLIENT_ID,
-          Authorization: "Bearer " + LS_AUTH_TOKEN,
-        },
-      });
-
-      if (result.data.data.length !== 0) {
-        setOnlineChannels((onlineChannels) => [
-          ...onlineChannels,
-          result.data.data[0],
-        ]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Router>

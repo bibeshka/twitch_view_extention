@@ -8,6 +8,25 @@ const ClipSingle = ({ channelID, channelName, clipDate, AUTH_TOKEN }) => {
   const [clips, setClips] = useState([]);
 
   useEffect(() => {
+    const getClips = async (channelID, clipDate) => {
+      try {
+        const result = await axios({
+          method: "get",
+          url: `https://api.twitch.tv/helix/clips?broadcaster_id=${channelID}&first=3&started_at=${clipDate}&ended_at=${moment(
+            Date.now()
+          ).toISOString()}`,
+          headers: {
+            "Client-ID": process.env.REACT_APP_CLIENT_ID,
+            Authorization: "Bearer " + AUTH_TOKEN,
+          },
+        });
+
+        return result.data.data;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     let mounted = true;
 
     if (clipDate) {
@@ -20,26 +39,7 @@ const ClipSingle = ({ channelID, channelName, clipDate, AUTH_TOKEN }) => {
     }
 
     return () => (mounted = false);
-  }, [channelID, clipDate]);
-
-  const getClips = async (channelID, clipDate) => {
-    try {
-      const result = await axios({
-        method: "get",
-        url: `https://api.twitch.tv/helix/clips?broadcaster_id=${channelID}&first=3&started_at=${clipDate}&ended_at=${moment(
-          Date.now()
-        ).toISOString()}`,
-        headers: {
-          "Client-ID": process.env.REACT_APP_CLIENT_ID,
-          Authorization: "Bearer " + AUTH_TOKEN,
-        },
-      });
-
-      return result.data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [channelID, clipDate, AUTH_TOKEN]);
 
   return (
     <div>

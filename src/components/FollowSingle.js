@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { CLIENT_ID } from "../api";
 import axios from "axios";
 import moment from "moment";
 
@@ -8,28 +7,28 @@ const FollowSingle = ({ AUTH_TOKEN, channel }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    const getGame = async (id) => {
+      try {
+        const result = await axios({
+          method: "get",
+          url: `https://api.twitch.tv/helix/games?id=${id}`,
+          headers: {
+            "Client-ID": process.env.REACT_APP_CLIENT_ID,
+            Authorization: "Bearer " + AUTH_TOKEN,
+          },
+        });
+
+        return result.data.data[0].name;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getGame(channel.game_id).then((res) => {
       setGame(res);
       setLoaded(true);
     });
-  }, []);
-
-  const getGame = async (id) => {
-    try {
-      const result = await axios({
-        method: "get",
-        url: `https://api.twitch.tv/helix/games?id=${id}`,
-        headers: {
-          "Client-ID": process.env.REACT_APP_CLIENT_ID,
-          Authorization: "Bearer " + AUTH_TOKEN,
-        },
-      });
-
-      return result.data.data[0].name;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [channel.game_id, AUTH_TOKEN]);
 
   return (
     <div>

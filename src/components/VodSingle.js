@@ -8,8 +8,25 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    const getVideo = async (channelID) => {
+      try {
+        const result = await axios({
+          method: "get",
+          url: `https://api.twitch.tv/helix/videos?user_id=${channelID}&first=3`,
+          headers: {
+            "Client-ID": process.env.REACT_APP_CLIENT_ID,
+            Authorization: "Bearer " + AUTH_TOKEN,
+          },
+        });
+
+        setVideos(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getVideo(channelID).then(() => setLoaded(true));
-  }, [channelID]);
+  }, [channelID, AUTH_TOKEN]);
 
   const sliceImageString = (str) => {
     const result = str.substr(0, str.length - 22);
@@ -28,23 +45,6 @@ const VodSingle = ({ channelID, channelName, AUTH_TOKEN }) => {
       }
     });
     return arr.join("");
-  };
-
-  const getVideo = async (channelID) => {
-    try {
-      const result = await axios({
-        method: "get",
-        url: `https://api.twitch.tv/helix/videos?user_id=${channelID}&first=3`,
-        headers: {
-          "Client-ID": process.env.REACT_APP_CLIENT_ID,
-          Authorization: "Bearer " + AUTH_TOKEN,
-        },
-      });
-
-      setVideos(result.data.data);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
